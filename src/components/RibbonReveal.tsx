@@ -3,15 +3,23 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface RibbonRevealCopy {
+  countdownTitle: string;
+  lockedMessage: string;
+  pullHint: string;
+  nameNote: string;
+}
+
 interface RibbonRevealProps {
   onReveal: () => void;
   isRevealed: boolean;
   canReveal: boolean;
   name: string;
   revealCountdown: { days: number; hours: number; minutes: number; seconds: number };
+  copy: RibbonRevealCopy;
 }
 
-export default function RibbonReveal({ onReveal, isRevealed, canReveal, name, revealCountdown }: RibbonRevealProps) {
+export default function RibbonReveal({ onReveal, isRevealed, canReveal, name, revealCountdown, copy }: RibbonRevealProps) {
   const [isUntying, setIsUntying] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const revealInProgressRef = useRef(false);
@@ -159,18 +167,18 @@ export default function RibbonReveal({ onReveal, isRevealed, canReveal, name, re
             >
               {canReveal ? (
                 <p className="text-elegant text-center text-sm md:text-base font-semibold tracking-wide" style={{ color: 'var(--color-rose-dark)' }}>
-                  ✨ Pull the ribbon to reveal name ✨
+                  {copy.pullHint}
                 </p>
               ) : (
                 <div className="flex flex-col items-center gap-4">
                   <span
-                    className="text-[10px] md:text-[11px] uppercase tracking-[4px] font-semibold"
+                    className="text-[10px] md:text-[11px] tracking-[0.2em] font-semibold"
                     style={{
                       color: 'var(--color-text-medium)',
                       textShadow: '0 1px 0 rgba(255,255,255,0.7)',
                     }}
                   >
-                    Name Reveal In
+                    {copy.countdownTitle}
                   </span>
                   <div className="flex gap-2.5 md:gap-3">
                     {[
@@ -206,6 +214,12 @@ export default function RibbonReveal({ onReveal, isRevealed, canReveal, name, re
                       </div>
                     ))}
                   </div>
+                  {/* <p
+                    className="text-elegant text-center text-[11px] md:text-xs font-medium leading-snug px-2"
+                    style={{ color: 'var(--color-text-light)', maxWidth: '22rem' }}
+                  >
+                    {copy.lockedMessage}
+                  </p> */}
                 </div>
               )}
             </motion.div>
@@ -274,7 +288,7 @@ export default function RibbonReveal({ onReveal, isRevealed, canReveal, name, re
               className="text-elegant italic"
               style={{ color: 'var(--color-text-light)', fontSize: '1.2rem' }}
             >
-              ✦ A name chosen with love ✦
+              {copy.nameNote}
             </motion.div>
           </motion.div>
         ) : null}

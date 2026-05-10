@@ -42,8 +42,9 @@ const translations = {
     event: "Naming Ceremony",
     for: "of our little princess",
     littleAngel: "Our Little Angel",
-    revealBtn: "✨ Click to reveal name",
-    revealLocked: "✦ Name will be revealed at 08:00 PM ✦",
+    revealBtn: "✨ Pull the ribbon to reveal her name ✨",
+    revealCountdownTitle: "Her name reveals in",
+    revealLocked: "✦ Her name unlocks at 8:00 PM today ✦",
     revealNote: "✦ A name chosen with love ✦",
     message: "A tiny star has come to stay,\nto light our hearts in every way.\nWith joy and blessings all around,\nthe sweetest love has now been found.",
     inviteText: "We invite you to share in the joyous occasion of our\nlittle princess's naming ceremony. Your presence will\nmake this day even more special and memorable.",
@@ -67,8 +68,9 @@ const translations = {
     event: "नामकरण समारोह",
     for: "हमारी नन्हीं राजकुमारी का",
     littleAngel: "हमारी नन्हीं परी",
-    revealBtn: "✨ नाम देखने के लिए क्लिक करें",
-    revealLocked: "✦ नाम शाम 08:00 बजे दिखाया जाएगा ✦",
+    revealBtn: "✨ रिबन खींचकर उनका नाम देखें ✨",
+    revealCountdownTitle: "उनके नाम का खुलासा",
+    revealLocked: "✦ उनका नाम आज शाम 8:00 बजे ✦",
     revealNote: "✦ प्यार से चुना गया नाम ✦",
     message: "एक छोटा सा तारा रहने आया है,\nहमारे दिलों को हर तरह से रोशन करने के लिए।\nचारों ओर खुशी और आशीर्वाद के साथ,\nसबसे प्यारा प्यार अब मिल गया है।",
     inviteText: "हम आपको हमारी नन्हीं राजकुमारी के नामकरण समारोह के\nखुशी के अवसर में शामिल होने के लिए आमंत्रित करते हैं।\nआपकी उपस्थिति इस दिन को और भी खास बना देगी।",
@@ -92,8 +94,9 @@ const translations = {
     event: "નામકરણ વિધિ",
     for: "અમારી નાની રાજકુમારીની",
     littleAngel: "અમારી નાની પરી",
-    revealBtn: "✨ નામ જોવા માટે ક્લિક કરો",
-    revealLocked: "✦ નામ સાંજે 08:00 વાગ્યે જાહેર કરવામાં આવશે ✦",
+    revealBtn: "✨ રિબન ખેંચીને તેનું નામ જુઓ ✨",
+    revealCountdownTitle: "તેના નામની ઘડીયાઈ",
+    revealLocked: "✦ તેનું નામ આજે સાંજે 8:00 વાગ્યે ✦",
     revealNote: "✦ પ્રેમથી પસંદ કરેલું નામ ✦",
     message: "એક નાનો તારો રહેવા આવ્યો છે,\nઅમારા હૃદયને બધી રીતે પ્રકાશિત કરવા માટે.\nચારે બાજુ આનંદ અને આશીર્વાદ સાથે,\nસૌથી સુંદર પ્રેમ હવે મળી ગયો છે.",
     inviteText: "અમે તમને અમારી નાની રાજકુમારીની નામકરણ વિધિના\nઆનંદદાયક પ્રસંગમાં સહભાગી થવા માટે આમંત્રિત કરીએ છીએ.\nતમારી હાજરી આ દિવસને વધુ ખાસ બનાવશે.",
@@ -121,6 +124,7 @@ export default function InvitationCard() {
   const [canReveal, setCanReveal] = useState(false);
   const t = translations[lang];
 
+  // Name reveal: 8:00 PM India Standard Time (UTC+5:30) on ceremony day
   const revealTime = new Date('2026-05-10T20:00:00+05:30').getTime();
   const [revealCountdown, setRevealCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -242,12 +246,18 @@ export default function InvitationCard() {
             {t.littleAngel}
           </p>
           <div className="name-reveal-stage">
-            <RibbonReveal 
-              onReveal={handleReveal} 
-              isRevealed={isRevealed} 
-              canReveal={canReveal} 
-              name="Nitya Chavhan" 
+            <RibbonReveal
+              onReveal={handleReveal}
+              isRevealed={isRevealed}
+              canReveal={canReveal}
+              name="Nitya Chavhan"
               revealCountdown={revealCountdown}
+              copy={{
+                countdownTitle: t.revealCountdownTitle,
+                lockedMessage: t.revealLocked,
+                pullHint: t.revealBtn,
+                nameNote: t.revealNote,
+              }}
             />
           </div>
         </motion.div>
