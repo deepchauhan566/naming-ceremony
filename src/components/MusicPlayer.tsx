@@ -1,10 +1,44 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const cleanup = () => {
+      document.removeEventListener('pointerdown', resumeOnInteraction);
+      document.removeEventListener('keydown', resumeOnInteraction);
+    };
+
+    const start = () =>
+      audio.play().then(() => {
+        setIsPlaying(true);
+      });
+
+    const resumeOnInteraction = (e: Event) => {
+      const el = e.target as HTMLElement | null;
+      if (el?.closest('.music-toggle')) return;
+      start()
+        .then(() => cleanup())
+        .catch(() => {});
+    };
+
+    start()
+      .then(() => cleanup())
+      .catch(() => {
+        document.addEventListener('pointerdown', resumeOnInteraction, { passive: true });
+        document.addEventListener('keydown', resumeOnInteraction);
+      });
+
+    return () => {
+      cleanup();
+    };
+  }, []);
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -26,6 +60,7 @@ export default function MusicPlayer() {
         src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
         loop
         preload="auto"
+        playsInline
       />
       {isPlaying ? (
         <span style={{ fontSize: '1.2rem' }}>🔊</span>
